@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>静息 - 数字栖息地</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-canvas: #F5F4F1;
+      --bg-section: #FAF8F4;
+      --text-primary: #1A1918;
+      --text-secondary: #6D6C6A;
+      --text-tertiary: #9B9690;
+      --text-muted: #B5B0AA;
+      --accent-sage: #3D8A5A;
+      --border-subtle: #E5E4E1;
+      --white: #FFFFFF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      background: var(--bg-canvas);
+      color: var(--text-primary);
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    .viewport {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .canvas-wrapper {
+      width: 1440px;
+      transform-origin: top center;
+      position: relative;
+      background: var(--bg-canvas);
+    }
+
+    .page {
+      width: 1440px;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-canvas);
+    }
+
+    /* Header */
+    .header {
+      width: 1440px;
+      height: 88px;
+      padding: 28px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background: var(--accent-sage);
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .nav a {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 22px;
+      transition: color 0.2s ease;
+    }
+
+    .nav a:hover {
+      color: var(--accent-sage);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      width: 1440px;
+      min-height: 680px;
+      padding: 40px 80px 80px 80px;
+      display: flex;
+      align-items: center;
+      gap: 60px;
+      position: relative;
+    }
+
+    .hero-left {
+      width: 680px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .hero-glow {
+      position: absolute;
+      left: -80px;
+      top: -60px;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(61, 138, 90, 0.12) 0%, rgba(61, 138, 90, 0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-left > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-kicker {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--accent-sage);
+      letter-spacing: 1px;
+      line-height: 20px;
+    }
+
+    .hero-headline {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 52px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.25;
+      width: 620px;
+    }
+
+    .hero-subtitle {
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.8;
+      width: 520px;
+    }
+
+    .cta-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 0;
+    }
+
+    .cta-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 36px;
+      border-radius: 40px;
+      background: var(--accent-sage);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(61, 138, 90, 0.2);
+    }
+
+    .cta-button img {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .cta-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--white);
+      line-height: 23px;
+    }
+
+    .cta-hint {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      line-height: 20px;
+    }
+
+    .hero-image {
+      width: 520px;
+      height: 560px;
+      border-radius: 24px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Breath Section */
+    .breath-section {
+      width: 1440px;
+      padding: 100px 80px;
+      background: var(--bg-section);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 56px;
+    }
+
+    .breath-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .breath-kicker {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--accent-sage);
+      letter-spacing: 2px;
+      line-height: 20px;
+      text-align: center;
+    }
+
+    .breath-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 38px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .breath-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 23px;
+      text-align: center;
+    }
+
+    .breath-body {
+      width: 1280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 64px;
+    }
+
+    .circle-wrap {
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+    }
+
+    .circle-glow {
+      position: absolute;
+      left: -30px;
+      top: -30px;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(61, 138, 90, 0.08) 0%, rgba(61, 138, 90, 0) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .breath-circle {
+      width: 300px;
+      height: 300px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .breath-circle .ring {
+      position: absolute;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .ring-1 {
+      width: 280px;
+      height: 280px;
+      border: 1px solid rgba(61, 138, 90, 0.12);
+    }
+
+    .ring-2 {
+      width: 230px;
+      height: 230px;
+      border: 1.5px solid rgba(61, 138, 90, 0.2);
+    }
+
+    .ring-3 {
+      width: 176px;
+      height: 176px;
+      border: 1.5px solid rgba(61, 138, 90, 0.35);
+    }
+
+    .ring-4 {
+      width: 120px;
+      height: 120px;
+      background: rgba(61, 138, 90, 0.06);
+      border: 2px solid rgba(61, 138, 90, 0.5);
+    }
+
+    .ring-5 {
+      width: 64px;
+      height: 64px;
+      background: rgba(61, 138, 90, 0.12);
+      border: 1.5px solid rgba(61, 138, 90, 0.6);
+    }
+
+    .breath-circle-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-top: 12px;
+    }
+
+    .breath-circle-text .line-1 {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent-sage);
+      letter-spacing: 1px;
+      line-height: 16px;
+      opacity: 0.9;
+    }
+
+    .breath-circle-text .line-2 {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: 1px;
+      line-height: 16px;
+      opacity: 0.7;
+    }
+
+    .breath-circle-text .line-3 {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+      line-height: 16px;
+      opacity: 0.5;
+    }
+
+    .circle-label {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--accent-sage);
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .pattern-cards {
+      width: 460px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .pattern-card {
+      width: 460px;
+      padding: 28px;
+      border-radius: 16px;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .pattern-card.active {
+      border: 1.5px solid rgba(61, 138, 90, 0.3);
+      box-shadow: 0 2px 12px rgba(61, 138, 90, 0.08);
+    }
+
+    .pattern-card:not(.active) {
+      border: 1px solid var(--border-subtle);
+    }
+
+    .pattern-card .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 22px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .pattern-card.active .card-icon {
+      background: var(--accent-sage);
+    }
+
+    .pattern-card:not(.active) .card-icon {
+      background: #F0EDE8;
+    }
+
+    .pattern-card .card-icon img {
+      width: 44px;
+      height: 44px;
+      display: block;
+    }
+
+    .pattern-card .card-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pattern-card .card-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 26px;
+    }
+
+    .pattern-card .card-desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .pattern-card .card-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .pattern-card .card-time {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 19px;
+    }
+
+    .pattern-card.active .card-time {
+      color: var(--accent-sage);
+    }
+
+    .pattern-card:not(.active) .card-time {
+      color: var(--text-secondary);
+    }
+
+    .pattern-card .card-tag {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      line-height: 16px;
+    }
+
+    /* Gallery Section */
+    .gallery-section {
+      width: 1440px;
+      padding: 100px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .gallery-header {
+      width: 1280px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .gallery-header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .gallery-kicker {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--accent-sage);
+      letter-spacing: 2px;
+      line-height: 20px;
+    }
+
+    .gallery-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.44;
+    }
+
+    .gallery-hint {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      line-height: 20px;
+    }
+
+    .gallery-grid {
+      width: 1280px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+    }
+
+    .gallery-large {
+      width: 580px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .gallery-large-image {
+      width: 580px;
+      height: 480px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .gallery-large-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-large-caption {
+      width: 580px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .gallery-caption-text {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 22px;
+    }
+
+    .gallery-caption-meta {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      line-height: 19px;
+    }
+
+    .gallery-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .gallery-right-item {
+      width: 676px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .gallery-right-image {
+      width: 676px;
+      height: 228px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .gallery-right-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-right-caption {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 22px;
+    }
+
+    /* Quote Section */
+    .quote-section {
+      width: 1440px;
+      padding: 120px 80px;
+      background: var(--bg-section);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .quote-decor {
+      width: 40px;
+      height: 40px;
+    }
+
+    .quote-decor img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .quote-text {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 42px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.4;
+      text-align: center;
+      width: 680px;
+      white-space: pre-line;
+    }
+
+    .quote-attribution {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+      line-height: 22px;
+      text-align: center;
+    }
+
+    .quote-cta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-top: 16px;
+    }
+
+    .quote-cta-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 40px;
+      background: var(--accent-sage);
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .quote-cta-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(61, 138, 90, 0.2);
+    }
+
+    .quote-cta-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--white);
+      line-height: 22px;
+    }
+
+    .quote-cta-button img {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    .footer {
+      width: 1440px;
+      padding: 48px 80px 40px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .footer-main {
+      width: 1280px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background: var(--accent-sage);
+      flex-shrink: 0;
+    }
+
+    .footer-brand-name {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text-primary);
+      letter-spacing: 1.5px;
+      line-height: 1;
+    }
+
+    .footer-tagline {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      line-height: 20px;
+    }
+
+    .footer-nav {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .footer-nav a {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      text-decoration: none;
+      line-height: 20px;
+      transition: color 0.2s ease;
+    }
+
+    .footer-nav a:hover {
+      color: var(--accent-sage);
+    }
+
+    .footer-bottom {
+      width: 1280px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copyright,
+    .footer-made-with {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 19px;
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport">
+    <div class="canvas-wrapper">
+      <div class="page">
+        <!-- Header -->
+        <header class="header">
+          <div class="brand">
+            <div class="brand-dot"></div>
+            <span class="brand-name">静息</span>
+          </div>
+          <nav class="nav">
+            <a href="#breath">呼吸</a>
+            <a href="#gallery">自然</a>
+            <a href="#quote">冥想</a>
+            <a href="#footer">关于</a>
+          </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+          <div class="hero-left">
+            <div class="hero-glow"></div>
+            <p class="hero-kicker">— 数字栖息地</p>
+            <h1 class="hero-headline">在喧嚣深处</h1>
+            <h1 class="hero-headline">找到你的静息时刻</h1>
+            <p class="hero-subtitle">这里没有待办事项，没有通知提醒。只有你，和此刻的呼吸。无论何时打开，这里都是你的安静角落。</p>
+            <div class="cta-wrap">
+              <button class="cta-button" onclick="startBreathing()">
+                <img src="./assets/svg/2_38.svg" alt="">
+                <span class="cta-text">开始一次呼吸</span>
+              </button>
+              <span class="cta-hint">只需 3 分钟</span>
+            </div>
+          </div>
+          <div class="hero-image">
+            <img src="./assets/images/2_44.png" alt="晨雾山林">
+          </div>
+        </section>
+
+        <!-- Breath Section -->
+        <section class="breath-section" id="breath">
+          <div class="breath-header">
+            <p class="breath-kicker">呼吸引导</p>
+            <h2 class="breath-title">跟随圆的节奏</h2>
+            <p class="breath-subtitle">让呼吸慢下来，让心跳跟着圆的起伏</p>
+          </div>
+          <div class="breath-body">
+            <div class="circle-wrap">
+              <div class="circle-glow"></div>
+              <div class="breath-circle" id="breathCircle">
+                <div class="ring ring-1"></div>
+                <div class="ring ring-2"></div>
+                <div class="ring ring-3"></div>
+                <div class="ring ring-4"></div>
+                <div class="ring ring-5"></div>
+                <div class="breath-circle-text">
+                  <span class="line-1">吸气 4秒</span>
+                  <span class="line-2">屏息 7秒</span>
+                  <span class="line-3">呼气 8秒</span>
+                </div>
+              </div>
+              <span class="circle-label">4-7-8 呼吸法</span>
+            </div>
+            <div class="pattern-cards">
+              <div class="pattern-card active">
+                <div class="card-icon">
+                  <img src="./assets/svg/2_67.svg" alt="">
+                </div>
+                <div class="card-text">
+                  <h3 class="card-title">4-7-8 呼吸法</h3>
+                  <p class="card-desc">吸气 4 秒，屏息 7 秒，呼气 8 秒。缓解焦虑，帮助入眠。</p>
+                </div>
+                <div class="card-meta">
+                  <span class="card-time">3 min</span>
+                  <span class="card-tag">推荐</span>
+                </div>
+              </div>
+              <div class="pattern-card">
+                <div class="card-icon">
+                  <img src="./assets/svg/2_78.svg" alt="">
+                </div>
+                <div class="card-text">
+                  <h3 class="card-title">盒式呼吸</h3>
+                  <p class="card-desc">吸气、屏息、呼气、屏息各 4 秒。提升专注，平衡情绪。</p>
+                </div>
+                <div class="card-meta">
+                  <span class="card-time">4 min</span>
+                </div>
+              </div>
+              <div class="pattern-card">
+                <div class="card-icon">
+                  <img src="./assets/svg/2_87.svg" alt="">
+                </div>
+                <div class="card-text">
+                  <h3 class="card-title">腹式呼吸</h3>
+                  <p class="card-desc">用腹部深呼吸，每次 5 秒。深度放松，释放压力。</p>
+                </div>
+                <div class="card-meta">
+                  <span class="card-time">5 min</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section" id="gallery">
+          <div class="gallery-header">
+            <div class="gallery-header-left">
+              <p class="gallery-kicker">自然意境</p>
+              <h2 class="gallery-title">看一片风景，停一会儿</h2>
+            </div>
+            <span class="gallery-hint">点击图片进入沉浸模式</span>
+          </div>
+          <div class="gallery-grid">
+            <div class="gallery-large">
+              <div class="gallery-large-image">
+                <img src="./assets/images/2_104.png" alt="晨雾山林">
+              </div>
+              <div class="gallery-large-caption">
+                <span class="gallery-caption-text">晨雾山林</span>
+                <span class="gallery-caption-meta">浙江 · 莫干山</span>
+              </div>
+            </div>
+            <div class="gallery-right">
+              <div class="gallery-right-item">
+                <div class="gallery-right-image">
+                  <img src="./assets/images/2_110.png" alt="湖面倒影">
+                </div>
+                <span class="gallery-right-caption">湖面倒影</span>
+              </div>
+              <div class="gallery-right-item">
+                <div class="gallery-right-image">
+                  <img src="./assets/images/2_113.png" alt="林间光影">
+                </div>
+                <span class="gallery-right-caption">林间光影</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quote Section -->
+        <section class="quote-section" id="quote">
+          <div class="quote-decor">
+            <img src="./assets/svg/2_116.svg" alt="">
+          </div>
+          <h2 class="quote-text">不必赶路
+此刻已是目的地</h2>
+          <p class="quote-attribution">— 静息 · 每日感悟</p>
+          <div class="quote-cta">
+            <button class="quote-cta-button" onclick="startBreathing()">
+              <span class="quote-cta-text">当你准备好了，开始吧</span>
+              <img src="./assets/svg/2_125.svg" alt="">
+            </button>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer" id="footer">
+          <div class="footer-main">
+            <div class="footer-left">
+              <div class="footer-brand">
+                <div class="footer-dot"></div>
+                <span class="footer-brand-name">静息</span>
+              </div>
+              <p class="footer-tagline">愿你在此刻找到平静</p>
+            </div>
+            <nav class="footer-nav">
+              <a href="#footer">关于</a>
+              <a href="#footer">联系</a>
+              <a href="#footer">隐私</a>
+            </nav>
+          </div>
+          <div class="footer-bottom">
+            <span class="footer-copyright">2026 静息. 在喧嚣中，留一处安静。</span>
+            <span class="footer-made-with">用心制作</span>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const wrapper = document.querySelector('.canvas-wrapper');
+      const viewport = document.querySelector('.viewport');
+      const pageHeight = 3238;
+
+      function updateScale() {
+        const scale = window.innerWidth / 1440;
+        wrapper.style.transform = 'scale(' + scale + ')';
+        viewport.style.height = (pageHeight * scale) + 'px';
+      }
+
+      window.addEventListener('resize', updateScale);
+      updateScale();
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').slice(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            const scale = window.innerWidth / 1440;
+            const top = target.getBoundingClientRect().top + window.pageYOffset;
+            window.scrollTo({ top: top * scale, behavior: 'smooth' });
+          }
+        });
+      });
+    })();
+
+    function startBreathing() {
+      const circle = document.getElementById('breathCircle');
+      if (circle.classList.contains('breathing')) return;
+      circle.classList.add('breathing');
+
+      // 4-7-8 breathing animation cycle
+      const keyframes = [
+        { transform: 'scale(1)' },
+        { transform: 'scale(1.15)' },
+        { transform: 'scale(1.15)' },
+        { transform: 'scale(1)' }
+      ];
+      const timings = {
+        duration: 19000,
+        iterations: 3,
+        easing: 'ease-in-out'
+      };
+
+      const anim = circle.animate(keyframes, timings);
+      anim.onfinish = function() {
+        circle.classList.remove('breathing');
+      };
+    }
+  </script>
+</body>
+</html>
