@@ -1,0 +1,9 @@
+# Cloudflare Pages 会读取这个文件（静态导出时会自动拷到 out/）
+# 图片与视频都是静态资源，长缓存；HTML 每次校验，方便更新后立刻生效。
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

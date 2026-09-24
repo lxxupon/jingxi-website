@@ -1,0 +1,8 @@
+# Cloudflare Pages 配置（npm run deploy:pages）
+# 静态导出目录由 npm run build:static 生成
+name = "jingxi-website"
+compatibility_date = "2026-09-24"
+pages_build_output_dir = "out"
+
+# 图片与视频文件名带哈希，可以放心长缓存
+[env.production]

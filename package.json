@@ -1,0 +1,22 @@
+{
+  "name": "jingxi",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "静息 · 数字栖息地 — Next.js 站点，本地 SQLite 全栈 / 线上可静态导出到 Cloudflare",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "db:reset": "node scripts/seed.js --reset",
+    "build:static": "node scripts/build-static.mjs",
+    "pages:dev": "npm run build:static && wrangler pages dev out",
+    "deploy:pages": "npm run build:static && wrangler pages deploy out"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

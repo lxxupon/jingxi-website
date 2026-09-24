@@ -8,3 +8,19 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Node / Next.js
+node_modules/
+.next/
+.env*.local
+
+# Local SQLite dev data
+data/
+
+# Static export (npm run build:static)
+out/
+.wrangler/
+
+# Logs
+*.log
+.next-dev.log
